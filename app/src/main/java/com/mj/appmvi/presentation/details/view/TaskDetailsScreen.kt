@@ -1,4 +1,4 @@
-package com.mj.appmvi.presentation.details
+package com.mj.appmvi.presentation.details.view
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -6,30 +6,29 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.mj.appmvi.R
 import com.mj.appmvi.domain.model.TodoItemModel
+import com.mj.appmvi.presentation.details.model.TaskDetailsViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskDetailsScreen(
-    initialTask: TodoItemModel? = null,
-    onSave: (TodoItemModel) -> Unit,
-    onCancel: () -> Unit
-) {
+fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
     // State variables (if editing, pre-fill them)
     val context = LocalContext.current
-    var title by remember { mutableStateOf(initialTask?.title ?: "") }
-    var description by remember { mutableStateOf(initialTask?.description ?: "") }
-    var isDone by remember { mutableStateOf(initialTask?.isDone ?: false) }
-    var dueDate by remember { mutableStateOf(initialTask?.dueDate) }
+    var title by remember { mutableStateOf(viewModel.initialTask?.title ?: "") }
+    var description by remember { mutableStateOf(viewModel.initialTask?.description ?: "") }
+    var isDone by remember { mutableStateOf(viewModel.initialTask?.isDone ?: false) }
+    var dueDate by remember { mutableStateOf(viewModel.initialTask?.dueDate) }
 
     val dateFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
     val calendar = Calendar.getInstance()
@@ -38,7 +37,7 @@ fun TaskDetailsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(if (initialTask == null) stringResource(R.string.add_task) else stringResource(R.string.edit_task)) }
+                    Text(if (viewModel.initialTask == null) stringResource(R.string.add_task) else stringResource(R.string.edit_task)) }
             )
         },
         bottomBar = {
@@ -53,7 +52,7 @@ fun TaskDetailsScreen(
                 }
                 Button(
                     onClick = {
-                        val task = initialTask?.copy(
+                        val task = viewModel.initialTask?.copy(
                             title = title,
                             description = description,
                             isDone = isDone,
@@ -102,7 +101,7 @@ fun TaskDetailsScreen(
             )
 
             Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {

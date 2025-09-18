@@ -1,4 +1,4 @@
-package com.mj.appmvi.ui.theme
+package com.mj.appmvi.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,6 +1,11 @@
-package com.mj.appmvi.domain.model
+package com.mj.appmvi.data.local.entity
 
-data class TodoItemModel (
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "todo")
+data class TodoEntity (
+    @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
     val title: String = "",
     val description: String = "",
