@@ -25,10 +25,10 @@ import java.util.*
 fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
     // State variables (if editing, pre-fill them)
     val context = LocalContext.current
-    var title by remember { mutableStateOf(viewModel.initialTask?.title ?: "") }
-    var description by remember { mutableStateOf(viewModel.initialTask?.description ?: "") }
-    var isDone by remember { mutableStateOf(viewModel.initialTask?.isDone ?: false) }
-    var dueDate by remember { mutableStateOf(viewModel.initialTask?.dueDate) }
+    var title by remember { mutableStateOf(viewModel.initialTask.title) }
+    var description by remember { mutableStateOf(viewModel.initialTask.description) }
+    var isDone by remember { mutableStateOf(viewModel.initialTask.isDone) }
+    var dueDate by remember { mutableStateOf(viewModel.initialTask.dueDate) }
 
     val dateFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
     val calendar = Calendar.getInstance()
@@ -37,7 +37,7 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(if (viewModel.initialTask == null) stringResource(R.string.add_task) else stringResource(R.string.edit_task)) }
+                    Text(if (viewModel.initialTask.id == 0L) stringResource(R.string.add_task) else stringResource(R.string.edit_task)) }
             )
         },
         bottomBar = {
@@ -47,24 +47,18 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                OutlinedButton(onClick = { onCancel() }) {
+                OutlinedButton(onClick = {  }) {
                     Text("Cancel")
                 }
                 Button(
                     onClick = {
-                        val task = viewModel.initialTask?.copy(
-                            title = title,
-                            description = description,
-                            isDone = isDone,
-                            dueDate = dueDate
-                        ) ?: TodoItemModel(
-                            id = 0,
+                        val task = viewModel.initialTask.copy(
                             title = title,
                             description = description,
                             isDone = isDone,
                             dueDate = dueDate
                         )
-                        onSave(task)
+//                        onSave(task)
                     },
                     enabled = title.isNotBlank()
                 ) {

@@ -1,0 +1,14 @@
+package com.mj.appmvi.utils
+
+data class UiState<T>(
+    val screenState : ScreenState = ScreenState.None,
+    val state : T ?= null
+)
+
+sealed interface ScreenState {
+    data object Paginating : ScreenState
+    data object Loading : ScreenState
+    data object Refreshing : ScreenState
+    data object Searching : ScreenState
+    data object None : ScreenState
+}

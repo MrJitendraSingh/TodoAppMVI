@@ -15,6 +15,6 @@ class TaskDetailsViewModel @Inject constructor(
     private val repositoryTodoImp: RepositoryTodoImp
 ) : ViewModel() {
 
-    var initialTask by mutableStateOf<TodoItemModel?>(null)
+    var initialTask by mutableStateOf(TodoItemModel())
 
 }
