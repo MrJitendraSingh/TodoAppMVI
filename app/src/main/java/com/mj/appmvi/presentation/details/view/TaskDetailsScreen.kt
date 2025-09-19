@@ -14,8 +14,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mj.appmvi.R
 import com.mj.appmvi.domain.model.TodoItemModel
+import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
 import com.mj.appmvi.presentation.details.model.TaskDetailsViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,6 +27,7 @@ import java.util.*
 fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
     // State variables (if editing, pre-fill them)
     val context = LocalContext.current
+    val uiState by viewModel.state.collectAsStateWithLifecycle()
     var title by remember { mutableStateOf(viewModel.initialTask.title) }
     var description by remember { mutableStateOf(viewModel.initialTask.description) }
     var isDone by remember { mutableStateOf(viewModel.initialTask.isDone) }
@@ -40,32 +43,6 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
                     Text(if (viewModel.initialTask.id == 0L) stringResource(R.string.add_task) else stringResource(R.string.edit_task)) }
             )
         },
-        bottomBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                OutlinedButton(onClick = {  }) {
-                    Text("Cancel")
-                }
-                Button(
-                    onClick = {
-                        val task = viewModel.initialTask.copy(
-                            title = title,
-                            description = description,
-                            isDone = isDone,
-                            dueDate = dueDate
-                        )
-//                        onSave(task)
-                    },
-                    enabled = title.isNotBlank()
-                ) {
-                    Text(stringResource(R.string.save))
-                }
-            }
-        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -75,8 +52,15 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
+                value = uiState.state?.taskDetails?.title ?: "",
+                onValueChange = {
+                    viewModel.onAction(
+                        UiTaskDetailsActions.OnTaskAdded(
+                            uiState.state?.taskDetails?.copy(
+                                title = it
+                            )?: TodoItemModel()
+                        )
+                    ) },
                 label = { Text(stringResource(R.string.title)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -87,8 +71,16 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
             )
 
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = uiState.state?.taskDetails?.description ?: "",
+                onValueChange = {
+                    viewModel.onAction(
+                        UiTaskDetailsActions.OnTaskAdded(
+                            uiState.state?.taskDetails?.copy(
+                                description = it
+                            )?: TodoItemModel()
+                        )
+                    )
+                },
                 label = { Text(stringResource(R.string.description)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3
@@ -101,8 +93,16 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
             ) {
                 Text("Completed")
                 Switch(
-                    checked = isDone,
-                    onCheckedChange = { isDone = it }
+                    checked = uiState.state?.taskDetails?.isDone?: false,
+                    onCheckedChange = {
+                        viewModel.onAction(
+                            UiTaskDetailsActions.OnTaskAdded(
+                                uiState.state?.taskDetails?.copy(
+                                    isDone = it
+                                )?: TodoItemModel()
+                            )
+                        )
+                    }
                 )
             }
 
@@ -135,6 +135,38 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
             }) {
                 Text(dueDate?.let { "Due: ${dateFormatter.format(Date(it))}" } ?: "Set Due Date")
             }
+
+            CancelSave(uiState.state?.taskDetails?: TodoItemModel()) {
+                viewModel.onAction(it)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CancelSave(
+    todoItemModel: TodoItemModel,
+    onClick: (UiTaskDetailsActions) -> Unit
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        OutlinedButton(onClick = {
+            onClick(UiTaskDetailsActions.OnBackPressed)
+        }) {
+            Text("Cancel")
+        }
+        Button(
+            onClick = {
+                onClick(UiTaskDetailsActions.OnTaskAdded(todoItemModel))
+            },
+            enabled = todoItemModel.title.isEmpty()
+        ) {
+            Text(stringResource(R.string.save))
         }
     }
 }
