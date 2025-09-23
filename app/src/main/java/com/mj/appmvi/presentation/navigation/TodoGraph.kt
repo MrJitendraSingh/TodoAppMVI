@@ -5,18 +5,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.mj.appmvi.presentation.details.view.TaskDetailsScreen
 import com.mj.appmvi.presentation.tasks.view.TaskListScreen
 
 @Composable
 fun TodoGraph(navHostController: NavHostController = rememberNavController()) {
 
-    NavHost(navController = navHostController, startDestination = TodoRoute.TaskDetailScreen.route){
-        composable(route = TodoRoute.TaskListScreen.route) {
-            TaskListScreen()
+    NavHost(navController = navHostController, startDestination = TodoRoute.TaskListScreen){
+        composable<TodoRoute.TaskListScreen> {
+            TaskListScreen(navHostController)
         }
-        composable(route = TodoRoute.TaskDetailScreen.route) {
-            TaskDetailsScreen()
+        composable<TodoRoute.TaskDetailScreen> {
+            TaskDetailsScreen(navHostController, it.id)
         }
     }
 }

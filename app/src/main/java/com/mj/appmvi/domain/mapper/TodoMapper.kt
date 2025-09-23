@@ -7,7 +7,7 @@ class TodoMapper {
 }
 
 fun TodoItemModel.toEntity() = TodoEntity(
-    id = id?:0,
+    id = id,
     title = title,
     description = description,
     isDone = isDone,

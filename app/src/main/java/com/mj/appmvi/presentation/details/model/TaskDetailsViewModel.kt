@@ -5,15 +5,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mj.appmvi.data.repository.RepositoryTodoImp
+import com.mj.appmvi.domain.mapper.toEntity
 import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsState
+import com.mj.appmvi.presentation.tasks.intent.UiTaskListState
 import com.mj.appmvi.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -31,9 +37,18 @@ class TaskDetailsViewModel @Inject constructor(
 
     fun onAction(action: UiTaskDetailsActions){
         when(action){
-            UiTaskDetailsActions.FetchDetails -> TODO()
+            is UiTaskDetailsActions.FetchDetails -> {
+                getTaskDetails(action.id)
+            }
             UiTaskDetailsActions.OnBackPressed -> TODO()
-            is UiTaskDetailsActions.OnTaskAdded -> {
+            UiTaskDetailsActions.OnTaskSave -> {
+                viewModelScope.launch(Dispatchers.IO){
+                    state.value.state?.let {
+                        repositoryTodoImp.todoDao.insertTodo(it.taskDetails.toEntity())
+                    }
+                }
+            }
+            is UiTaskDetailsActions.OnTaskUpdate -> {
                 _state.update {
                     Log.e("TAG", "onAction: ", )
                     it.copy(
@@ -44,6 +59,16 @@ class TaskDetailsViewModel @Inject constructor(
                 }
             }
 
+        }
+    }
+
+    fun getTaskDetails(id: Long?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repositoryTodoImp.getTodoById(id!!).collectLatest { details ->
+                _state.update { it.copy(
+                    state = it.state?.copy(details)
+                ) }
+            }
         }
     }
 

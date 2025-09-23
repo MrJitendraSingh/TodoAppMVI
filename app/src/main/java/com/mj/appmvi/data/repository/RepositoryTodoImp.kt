@@ -25,5 +25,5 @@ class RepositoryTodoImp(val todoDao: TodoDao) : RepositoryTodo {
         it.map { item -> item.toModel() }
     }
 
-    override suspend fun getTodoById(id: Int): Flow<TodoItemModel> = todoDao.getTodoById(id).map { it.toModel() }
+    override suspend fun getTodoById(id: Long): Flow<TodoItemModel> = todoDao.getTodoById(id).map { it.toModel() }
 }

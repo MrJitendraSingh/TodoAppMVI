@@ -34,13 +34,19 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mj.appmvi.R
 import com.mj.appmvi.domain.model.TodoItemModel
+import com.mj.appmvi.presentation.navigation.TodoRoute
 import com.mj.appmvi.presentation.tasks.model.TaskListViewModel
+import kotlinx.coroutines.flow.take
 import java.text.SimpleDateFormat
 
 @Composable
-fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel()) {
+fun TaskListScreen(navController: NavController) {
+    val viewModel: TaskListViewModel = hiltViewModel()
+    val uiState = viewModel.state.collectAsStateWithLifecycle()
     val state = rememberLazyListState()
     Column(Modifier.fillMaxSize()){
         Row(Modifier
@@ -56,17 +62,19 @@ fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel()) {
                 modifier = Modifier.size(48.dp)
                     .clip(CircleShape)
                     .clickable{
-
+                        navController.navigate(TodoRoute.TaskDetailScreen())
                     }.padding(12.dp)
             )
         }
 
         LazyColumn(state = state) {
-            items(viewModel.taskList.value){ task ->
+            items(uiState.value.state!!.task){ task ->
                 TodoItemCard(
                     todo = task,
                     onCheckedChange = { isChecked -> },
-                    onClick = {  }
+                    onClick = {
+                        navController.navigate(TodoRoute.TaskDetailScreen(id = task.id))
+                    }
                 )
             }
         }

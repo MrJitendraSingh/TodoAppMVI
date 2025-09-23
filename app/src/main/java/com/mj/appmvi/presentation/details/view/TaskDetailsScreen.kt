@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mj.appmvi.R
 import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
@@ -24,17 +25,18 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
+fun TaskDetailsScreen(navController: NavController, id: Long?) {
     // State variables (if editing, pre-fill them)
+    val viewModel: TaskDetailsViewModel = hiltViewModel()
     val context = LocalContext.current
     val uiState by viewModel.state.collectAsStateWithLifecycle()
-    var title by remember { mutableStateOf(viewModel.initialTask.title) }
-    var description by remember { mutableStateOf(viewModel.initialTask.description) }
-    var isDone by remember { mutableStateOf(viewModel.initialTask.isDone) }
-    var dueDate by remember { mutableStateOf(viewModel.initialTask.dueDate) }
 
     val dateFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
     val calendar = Calendar.getInstance()
+
+    LaunchedEffect(Unit) {
+        viewModel.getTaskDetails(id)
+    }
 
     Scaffold(
         topBar = {
@@ -55,7 +57,7 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
                 value = uiState.state?.taskDetails?.title ?: "",
                 onValueChange = {
                     viewModel.onAction(
-                        UiTaskDetailsActions.OnTaskAdded(
+                        UiTaskDetailsActions.OnTaskUpdate(
                             uiState.state?.taskDetails?.copy(
                                 title = it
                             )?: TodoItemModel()
@@ -74,7 +76,7 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
                 value = uiState.state?.taskDetails?.description ?: "",
                 onValueChange = {
                     viewModel.onAction(
-                        UiTaskDetailsActions.OnTaskAdded(
+                        UiTaskDetailsActions.OnTaskUpdate(
                             uiState.state?.taskDetails?.copy(
                                 description = it
                             )?: TodoItemModel()
@@ -96,7 +98,7 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
                     checked = uiState.state?.taskDetails?.isDone?: false,
                     onCheckedChange = {
                         viewModel.onAction(
-                            UiTaskDetailsActions.OnTaskAdded(
+                            UiTaskDetailsActions.OnTaskUpdate(
                                 uiState.state?.taskDetails?.copy(
                                     isDone = it
                                 )?: TodoItemModel()
@@ -121,7 +123,13 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
                             { _, hour, minute ->
                                 calendar.set(Calendar.HOUR_OF_DAY, hour)
                                 calendar.set(Calendar.MINUTE, minute)
-                                dueDate = calendar.timeInMillis
+                                viewModel.onAction(
+                                    UiTaskDetailsActions.OnTaskUpdate(
+                                        uiState.state?.taskDetails?.copy(
+                                            dueDate = calendar.timeInMillis
+                                        )?: TodoItemModel()
+                                    )
+                                )
                             },
                             now.get(Calendar.HOUR_OF_DAY),
                             now.get(Calendar.MINUTE),
@@ -133,7 +141,7 @@ fun TaskDetailsScreen(viewModel: TaskDetailsViewModel = hiltViewModel()) {
                     now.get(Calendar.DAY_OF_MONTH)
                 ).show()
             }) {
-                Text(dueDate?.let { "Due: ${dateFormatter.format(Date(it))}" } ?: "Set Due Date")
+                Text(uiState.state?.taskDetails?.dueDate?.let { "Due: ${dateFormatter.format(Date(it))}" } ?: "Set Due Date")
             }
 
             CancelSave(uiState.state?.taskDetails?: TodoItemModel()) {
@@ -162,9 +170,9 @@ fun CancelSave(
         }
         Button(
             onClick = {
-                onClick(UiTaskDetailsActions.OnTaskAdded(todoItemModel))
+                onClick(UiTaskDetailsActions.OnTaskSave)
             },
-            enabled = todoItemModel.title.isEmpty()
+            enabled = todoItemModel.title.isNotBlank()
         ) {
             Text(stringResource(R.string.save))
         }

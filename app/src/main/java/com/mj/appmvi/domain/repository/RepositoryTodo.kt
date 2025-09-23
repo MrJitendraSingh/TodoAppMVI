@@ -8,5 +8,5 @@ interface RepositoryTodo {
     suspend fun updateTodo(todoItemModel: TodoItemModel)
     suspend fun deleteTodo(todoItemModel: TodoItemModel)
     suspend fun getTodoList(): Flow<List<TodoItemModel>>
-    suspend fun getTodoById(id: Int): Flow<TodoItemModel>
+    suspend fun getTodoById(id: Long): Flow<TodoItemModel>
 }

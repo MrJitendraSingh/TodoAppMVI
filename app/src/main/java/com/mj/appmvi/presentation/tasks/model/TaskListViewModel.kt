@@ -21,13 +21,13 @@ class TaskListViewModel @Inject constructor(
     private val repositoryTodoImp: RepositoryTodoImp
 ) : ViewModel(){
 
-    private val _taskList = MutableStateFlow<List<TodoItemModel>>(emptyList())
-    val taskList = _taskList.asStateFlow()
-
     private val _state : MutableStateFlow<UiState<UiTaskListState>> = MutableStateFlow(UiState(state = UiTaskListState()))
     val state = _state.asStateFlow()
 
 
+    init {
+        getTaskList()
+    }
     fun getTaskList() {
         viewModelScope.launch(Dispatchers.IO) {
             repositoryTodoImp.getTodoList().collectLatest { list ->

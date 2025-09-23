@@ -3,7 +3,8 @@ package com.mj.appmvi.presentation.details.intent
 import com.mj.appmvi.domain.model.TodoItemModel
 
 sealed interface UiTaskDetailsActions {
-    object FetchDetails : UiTaskDetailsActions
+    data class FetchDetails(val id: Long?) : UiTaskDetailsActions
     object OnBackPressed : UiTaskDetailsActions
-    data class OnTaskAdded(val todoItemModel: TodoItemModel) : UiTaskDetailsActions
+    data class OnTaskUpdate(val todoItemModel: TodoItemModel) : UiTaskDetailsActions
+    object OnTaskSave : UiTaskDetailsActions
 }
