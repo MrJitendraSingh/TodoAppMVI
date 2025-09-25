@@ -1,6 +1,13 @@
 package com.mj.appmvi.presentation.navigation
 
-sealed class TodoRoute(val route: String) {
-    object TaskListScreen : TodoRoute("TaskListScreen")
-    data class TaskDetailScreen(val id: Long? = null) : TodoRoute("TaskDetailScreen")
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed class TodoRoute {
+
+    @Serializable
+    object TaskListScreen : TodoRoute()
+
+    @Serializable
+    data class TaskDetailScreen(val id: Long? = null) : TodoRoute()
 }

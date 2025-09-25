@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppMVITheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    //redundant column
                     Column(modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)) {
@@ -35,18 +36,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AppMVITheme {
-        Greeting("Android")
-    }
-}

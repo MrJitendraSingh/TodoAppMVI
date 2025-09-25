@@ -12,12 +12,19 @@ import com.mj.appmvi.presentation.tasks.view.TaskListScreen
 @Composable
 fun TodoGraph(navHostController: NavHostController = rememberNavController()) {
 
+    //modifier
     NavHost(navController = navHostController, startDestination = TodoRoute.TaskListScreen){
         composable<TodoRoute.TaskListScreen> {
-            TaskListScreen(navHostController)
+            TaskListScreen { todoRoute ->
+                navHostController.navigate(todoRoute)
+            }
         }
-        composable<TodoRoute.TaskDetailScreen> {
-            TaskDetailsScreen(navHostController, it.id)
+        composable<TodoRoute.TaskDetailScreen> { backStackEntry ->
+            //bring callback navigation
+            val route: TodoRoute.TaskDetailScreen = backStackEntry.toRoute()
+            TaskDetailsScreen( route.id) {
+                
+            }
         }
     }
 }

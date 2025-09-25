@@ -3,10 +3,9 @@ package com.mj.appmvi.presentation.tasks.model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mj.appmvi.data.repository.RepositoryTodoImp
-import com.mj.appmvi.domain.model.TodoItemModel
-import com.mj.appmvi.presentation.details.model.TaskDetailsViewModel
 import com.mj.appmvi.presentation.tasks.intent.UiTaskListState
-import com.mj.appmvi.utils.UiState
+import com.mj.appmvi.core.UiState
+import com.mj.appmvi.domain.repository.RepositoryTodo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class TaskListViewModel @Inject constructor(
-    private val repositoryTodoImp: RepositoryTodoImp
+    private val repositoryTodo: RepositoryTodo
 ) : ViewModel(){
 
     private val _state : MutableStateFlow<UiState<UiTaskListState>> = MutableStateFlow(UiState(state = UiTaskListState()))
@@ -30,7 +29,7 @@ class TaskListViewModel @Inject constructor(
     }
     fun getTaskList() {
         viewModelScope.launch(Dispatchers.IO) {
-            repositoryTodoImp.getTodoList().collectLatest { list ->
+            repositoryTodo.getTodoList().collectLatest { list ->
                 _state.update { it.copy(state = UiTaskListState(task = list as ArrayList)) }
             }
         }

@@ -11,8 +11,8 @@ import com.mj.appmvi.domain.mapper.toEntity
 import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsState
-import com.mj.appmvi.presentation.tasks.intent.UiTaskListState
-import com.mj.appmvi.utils.UiState
+import com.mj.appmvi.core.UiState
+import com.mj.appmvi.domain.repository.RepositoryTodo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskDetailsViewModel @Inject constructor(
-    private val repositoryTodoImp: RepositoryTodoImp
+    //data layer domain layer
+    private val repositoryTodo: RepositoryTodo
 ) : ViewModel() {
 
 
@@ -35,16 +36,17 @@ class TaskDetailsViewModel @Inject constructor(
 
     var initialTask by mutableStateOf(TodoItemModel())
 
+    //clean it
     fun onAction(action: UiTaskDetailsActions){
         when(action){
             is UiTaskDetailsActions.FetchDetails -> {
-                getTaskDetails(action.id)
+                if (action.id != null) getTaskDetails(action.id)
             }
             UiTaskDetailsActions.OnBackPressed -> TODO()
             UiTaskDetailsActions.OnTaskSave -> {
                 viewModelScope.launch(Dispatchers.IO){
                     state.value.state?.let {
-                        repositoryTodoImp.todoDao.insertTodo(it.taskDetails.toEntity())
+                        repositoryTodo.insertTodo(it.taskDetails)
                     }
                 }
             }
@@ -62,9 +64,11 @@ class TaskDetailsViewModel @Inject constructor(
         }
     }
 
-    fun getTaskDetails(id: Long?) {
+    //private
+    fun getTaskDetails(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            repositoryTodoImp.getTodoById(id!!).collectLatest { details ->
+            //fix this logic
+            repositoryTodo.getTodoById(id).collectLatest { details ->
                 _state.update { it.copy(
                     state = it.state?.copy(details)
                 ) }

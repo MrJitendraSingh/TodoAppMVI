@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.mj.appmvi.core.Const
 import com.mj.appmvi.data.local.dao.TodoDao
 import com.mj.appmvi.data.local.entity.TodoEntity
 
@@ -16,6 +17,6 @@ abstract class TodoDatabase : RoomDatabase(){
         fun getInstance(context: Context) = Room.databaseBuilder(
             context,
             TodoDatabase::class.java,
-            "todo-db").build()
+            Const.DB_NAME).build()
     }
 }

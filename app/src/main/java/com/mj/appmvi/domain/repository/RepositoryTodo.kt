@@ -10,3 +10,5 @@ interface RepositoryTodo {
     suspend fun getTodoList(): Flow<List<TodoItemModel>>
     suspend fun getTodoById(id: Long): Flow<TodoItemModel>
 }
+
+//use case

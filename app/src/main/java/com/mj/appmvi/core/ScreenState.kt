@@ -1,4 +1,4 @@
-package com.mj.appmvi.utils
+package com.mj.appmvi.core
 
 data class UiState<T>(
     val screenState : ScreenState = ScreenState.None,

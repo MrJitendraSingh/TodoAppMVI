@@ -31,49 +31,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mj.appmvi.R
+import com.mj.appmvi.core.TitleBar
 import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.presentation.navigation.TodoRoute
 import com.mj.appmvi.presentation.tasks.model.TaskListViewModel
 import kotlinx.coroutines.flow.take
 import java.text.SimpleDateFormat
 
+@Preview
 @Composable
-fun TaskListScreen(navController: NavController) {
-    val viewModel: TaskListViewModel = hiltViewModel()
+fun TaskListPreview(){
+    TaskListScreen(onNavigate = {})
+}
+
+@Composable
+fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel(), onNavigate: (TodoRoute) -> Unit) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
     val state = rememberLazyListState()
     Column(Modifier.fillMaxSize()){
-        Row(Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(stringResource(R.string.task_list),
-                style = MaterialTheme.typography.titleLarge)
-
-            Icon(Icons.Default.Add, contentDescription = "Add",
-                modifier = Modifier.size(48.dp)
-                    .clip(CircleShape)
-                    .clickable{
-                        navController.navigate(TodoRoute.TaskDetailScreen())
-                    }.padding(12.dp)
-            )
-        }
-
+        //sticky
         LazyColumn(state = state) {
+            stickyHeader {
+                TitleBar(stringResource(R.string.task_list)) {
+                    onNavigate(TodoRoute.TaskDetailScreen())
+                }
+            }
+
             items(uiState.value.state!!.task){ task ->
                 TodoItemCard(
                     todo = task,
                     onCheckedChange = { isChecked -> },
                     onClick = {
-                        navController.navigate(TodoRoute.TaskDetailScreen(id = task.id))
+                        onNavigate(TodoRoute.TaskDetailScreen(id = task.id))
                     }
                 )
             }
@@ -137,3 +133,5 @@ fun TodoItemCard(
         }
     }
 }
+
+//Preview?
