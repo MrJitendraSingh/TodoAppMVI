@@ -23,7 +23,7 @@ fun TodoGraph(navHostController: NavHostController = rememberNavController()) {
             //bring callback navigation
             val route: TodoRoute.TaskDetailScreen = backStackEntry.toRoute()
             TaskDetailsScreen( route.id) {
-                
+                navHostController.popBackStack()
             }
         }
     }

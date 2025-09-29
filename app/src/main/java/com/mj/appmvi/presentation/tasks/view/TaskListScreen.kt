@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +42,10 @@ import com.mj.appmvi.R
 import com.mj.appmvi.core.TitleBar
 import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.presentation.navigation.TodoRoute
+import com.mj.appmvi.presentation.tasks.intent.UiTaskListActions
+import com.mj.appmvi.presentation.tasks.intent.UiTaskListEffect
 import com.mj.appmvi.presentation.tasks.model.TaskListViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.take
 import java.text.SimpleDateFormat
 
@@ -55,21 +59,31 @@ fun TaskListPreview(){
 fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel(), onNavigate: (TodoRoute) -> Unit) {
     val uiState = viewModel.state.collectAsStateWithLifecycle()
     val state = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest {
+            when(it){
+                UiTaskListEffect.NavigateToTaskCreate -> onNavigate(TodoRoute.TaskDetailScreen())
+                is UiTaskListEffect.NavigateToTaskDetail -> onNavigate(TodoRoute.TaskDetailScreen(it.taskId))
+            }
+        }
+    }
+
     Column(Modifier.fillMaxSize()){
         //sticky
         LazyColumn(state = state) {
             stickyHeader {
                 TitleBar(stringResource(R.string.task_list)) {
-                    onNavigate(TodoRoute.TaskDetailScreen())
+                    viewModel.onAction(UiTaskListActions.OnAddTaskClicked)
                 }
             }
 
-            items(uiState.value.state!!.task){ task ->
+            items(uiState.value.task){ task ->
                 TodoItemCard(
                     todo = task,
                     onCheckedChange = { isChecked -> },
                     onClick = {
-                        onNavigate(TodoRoute.TaskDetailScreen(id = task.id))
+                        viewModel.onAction(UiTaskListActions.OnTaskStatusChanged(task.id?:0))
                     }
                 )
             }

@@ -13,11 +13,17 @@ import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsState
 import com.mj.appmvi.core.UiState
 import com.mj.appmvi.domain.repository.RepositoryTodo
+import com.mj.appmvi.presentation.details.intent.UiTaskDetailsEffect
+import com.mj.appmvi.presentation.navigation.TodoRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,34 +36,37 @@ class TaskDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val _state: MutableStateFlow<UiState<UiTaskDetailsState>> =
-        MutableStateFlow(UiState(state = UiTaskDetailsState(TodoItemModel())))
+    private val _state: MutableStateFlow<UiTaskDetailsState> = MutableStateFlow(UiTaskDetailsState())
     val state = _state.asStateFlow()
 
-    var initialTask by mutableStateOf(TodoItemModel())
+    private val _effectChannel = Channel<UiTaskDetailsEffect>()
+    val effect = _effectChannel.receiveAsFlow()
+
+
+
 
     //clean it
-    fun onAction(action: UiTaskDetailsActions){
+    fun onAction(action: UiTaskDetailsActions) {
         when(action){
             is UiTaskDetailsActions.FetchDetails -> {
                 if (action.id != null) getTaskDetails(action.id)
             }
-            UiTaskDetailsActions.OnBackPressed -> TODO()
+            UiTaskDetailsActions.OnBackPressed -> {
+                viewModelScope.launch {
+                    _effectChannel.send(UiTaskDetailsEffect.NavigateBack)
+                }
+            }
             UiTaskDetailsActions.OnTaskSave -> {
                 viewModelScope.launch(Dispatchers.IO){
-                    state.value.state?.let {
+                    _state.value.let {
                         repositoryTodo.insertTodo(it.taskDetails)
                     }
+                    _effectChannel.send(UiTaskDetailsEffect.NavigateBack)
                 }
             }
             is UiTaskDetailsActions.OnTaskUpdate -> {
                 _state.update {
-                    Log.e("TAG", "onAction: ", )
-                    it.copy(
-                        state = it.state?.copy(
-                            taskDetails = action.todoItemModel
-                        )
-                    )
+                    it.copy(taskDetails = action.todoItemModel)
                 }
             }
 
@@ -70,7 +79,7 @@ class TaskDetailsViewModel @Inject constructor(
             //fix this logic
             repositoryTodo.getTodoById(id).collectLatest { details ->
                 _state.update { it.copy(
-                    state = it.state?.copy(details)
+                    taskDetails = details
                 ) }
             }
         }
