@@ -12,11 +12,4 @@ import com.mj.appmvi.data.local.entity.TodoEntity
 abstract class TodoDatabase : RoomDatabase(){
 
     abstract fun getTodoDao(): TodoDao
-
-    companion object {
-        fun getInstance(context: Context) = Room.databaseBuilder(
-            context,
-            TodoDatabase::class.java,
-            Const.DB_NAME).build()
-    }
 }

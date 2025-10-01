@@ -47,7 +47,6 @@ fun TaskDetailsScreen(id: Long?, onNavigation:() -> Unit) {
 
 
     LaunchedEffect(Unit) {
-        //intent
         viewModel.onAction(UiTaskDetailsActions.FetchDetails(id))
 
         viewModel.effect.collect { event ->

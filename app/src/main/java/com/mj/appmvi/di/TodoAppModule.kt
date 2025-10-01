@@ -30,8 +30,6 @@ class TodoAppModule {
     fun provideTodoDao(todoDatabase: TodoDatabase) = todoDatabase.getTodoDao()
 
 
-    //@Binds
-    @Provides
-    fun provideTodoRepoImpl(todoDao: TodoDao) : RepositoryTodo = RepositoryTodoImp(todoDao)
+
 
 }

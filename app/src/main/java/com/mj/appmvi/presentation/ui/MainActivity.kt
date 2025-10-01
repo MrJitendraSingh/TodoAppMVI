@@ -24,12 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppMVITheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    //redundant column
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)) {
-                        TodoGraph()
-                    }
+                    TodoGraph(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

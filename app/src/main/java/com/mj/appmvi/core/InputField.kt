@@ -11,15 +11,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import com.mj.appmvi.R
-import com.mj.appmvi.domain.model.TodoItemModel
-import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
+import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
 
-
-@Preview
-@Composable
-fun TextInputFieldPreview() {
-    TextInputField(value = "Hello", onValueChange = {})
-}
 
 @Composable
 fun TextInputField(value: String,
@@ -39,4 +32,12 @@ fun TextInputField(value: String,
         keyboardOptions = keyboardOptions,
         modifier = modifier.fillMaxWidth()
     )
+}
+
+@Preview
+@Composable
+fun TextInputFieldPreview() {
+    PreviewWrapper {
+        TextInputField(value = "Hello", onValueChange = {})
+    }
 }

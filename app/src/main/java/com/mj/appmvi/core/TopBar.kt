@@ -21,13 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.mj.appmvi.R
 import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
 
-@Preview
-@Composable
-fun BackTitleBarPreview(){
-    PreviewWrapper {
-        BackTitleBar("Title"){}
-    }
-}
+
 
 @Composable
 fun BackTitleBar(title: String, onBack: () -> Unit){
@@ -49,13 +43,12 @@ fun BackTitleBar(title: String, onBack: () -> Unit){
 
 @Preview
 @Composable
-fun TitleBarPreview(){
+fun BackTitleBarPreview(){
     PreviewWrapper {
-        TitleBar("Todo App"){
-
-        }
+        BackTitleBar("Title"){}
     }
 }
+
 
 
 @Composable
@@ -74,6 +67,16 @@ fun TitleBar(title: String, onClick: () -> Unit){
             Icon(Icons.Default.Add,
                 contentDescription = stringResource(R.string.add),
                 tint = MaterialTheme.colorScheme.onPrimary)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun TitleBarPreview(){
+    PreviewWrapper {
+        TitleBar("Todo App"){
+
         }
     }
 }

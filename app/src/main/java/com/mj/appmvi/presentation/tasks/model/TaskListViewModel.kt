@@ -26,7 +26,7 @@ class TaskListViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
 
-    private val _effectChannel = Channel< UiTaskListEffect>()
+    private val _effectChannel = Channel<UiTaskListEffect>()
     val effect = _effectChannel.receiveAsFlow()
 
     init {

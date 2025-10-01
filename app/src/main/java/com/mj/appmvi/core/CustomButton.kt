@@ -12,15 +12,6 @@ import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
 import com.mj.appmvi.presentation.ui.theme.White
 
 
-@Preview
-@Composable
-fun PrimaryButtonPreview(){
-    PreviewWrapper {
-        PrimaryButton(text = "Save") {
-
-        }
-    }
-}
 
 @Composable
 fun PrimaryButton(text: String,
@@ -32,5 +23,15 @@ fun PrimaryButton(text: String,
         Text(text = text,
             style = MaterialTheme.typography.bodyMedium,
             color = White)
+    }
+}
+
+@Preview
+@Composable
+fun PrimaryButtonPreview(){
+    PreviewWrapper {
+        PrimaryButton(text = "Save") {
+
+        }
     }
 }

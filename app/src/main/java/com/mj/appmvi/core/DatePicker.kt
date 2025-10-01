@@ -6,8 +6,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
+import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
 import java.util.Calendar
 import java.util.Date
 import kotlin.collections.set
@@ -44,6 +46,14 @@ fun DateSelector(dueDate: Long?,
             now.get(Calendar.DAY_OF_MONTH)
         ).show()
     }) {
-        Text(dueDate?.let { "Due: ${millisToDate(it)}" } ?: "Set Due Date")
+        Text(dueDate?.let { "Due: ${it.millisToDate()}" } ?: "Set Due Date")
+    }
+}
+
+@Preview
+@Composable
+fun DateSelectorPreview(){
+    PreviewWrapper {
+        DateSelector(dueDate = System.currentTimeMillis(), onDateChange = {})
     }
 }

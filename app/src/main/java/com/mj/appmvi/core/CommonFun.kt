@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-fun millisToDate(millis: Long): String {
-    val date = Date(millis)
+//extension pls
+fun Long.millisToDate(): String {
+    val date = Date(this)
     val format = SimpleDateFormat(Const.DATE_FORMAT, Locale.getDefault())
     return format.format(date)
 }

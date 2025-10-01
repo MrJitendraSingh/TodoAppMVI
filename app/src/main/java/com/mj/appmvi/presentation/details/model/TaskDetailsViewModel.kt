@@ -1,26 +1,15 @@
 package com.mj.appmvi.presentation.details.model
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mj.appmvi.data.repository.RepositoryTodoImp
-import com.mj.appmvi.domain.mapper.toEntity
-import com.mj.appmvi.domain.model.TodoItemModel
-import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
-import com.mj.appmvi.presentation.details.intent.UiTaskDetailsState
-import com.mj.appmvi.core.UiState
 import com.mj.appmvi.domain.repository.RepositoryTodo
+import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsEffect
-import com.mj.appmvi.presentation.navigation.TodoRoute
+import com.mj.appmvi.presentation.details.intent.UiTaskDetailsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -31,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskDetailsViewModel @Inject constructor(
-    //data layer domain layer
     private val repositoryTodo: RepositoryTodo
 ) : ViewModel() {
 

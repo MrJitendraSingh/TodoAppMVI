@@ -7,8 +7,9 @@ import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.domain.repository.RepositoryTodo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class RepositoryTodoImp(val todoDao: TodoDao) : RepositoryTodo {
+class RepositoryTodoImp @Inject constructor(val todoDao: TodoDao) : RepositoryTodo {
     override suspend fun insertTodo(todoItemModel: TodoItemModel) {
         todoDao.insertTodo(todoItemModel.toEntity())
     }

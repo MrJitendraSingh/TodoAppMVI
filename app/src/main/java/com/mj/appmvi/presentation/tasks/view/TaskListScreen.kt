@@ -45,15 +45,12 @@ import com.mj.appmvi.presentation.navigation.TodoRoute
 import com.mj.appmvi.presentation.tasks.intent.UiTaskListActions
 import com.mj.appmvi.presentation.tasks.intent.UiTaskListEffect
 import com.mj.appmvi.presentation.tasks.model.TaskListViewModel
+import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.take
 import java.text.SimpleDateFormat
+import java.util.Date
 
-@Preview
-@Composable
-fun TaskListPreview(){
-    TaskListScreen(onNavigate = {})
-}
 
 @Composable
 fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel(), onNavigate: (TodoRoute) -> Unit) {
@@ -148,4 +145,20 @@ fun TodoItemCard(
     }
 }
 
-//Preview?
+@Preview
+@Composable
+fun TaskItemPreview(){
+    PreviewWrapper {
+        TodoItemCard(todo = TodoItemModel(title = "Test", description = "Test description", dueDate = System.currentTimeMillis()),
+            onCheckedChange = {},
+            onClick = {})
+    }
+}
+
+@Preview
+@Composable
+fun TaskListPreview(){
+    PreviewWrapper {
+        TaskListScreen(onNavigate = {})
+    }
+}
