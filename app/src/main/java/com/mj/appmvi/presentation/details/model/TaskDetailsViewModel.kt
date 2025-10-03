@@ -2,6 +2,7 @@ package com.mj.appmvi.presentation.details.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mj.appmvi.core.TodoDefaultRepo
 import com.mj.appmvi.domain.repository.RepositoryTodo
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsEffect
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskDetailsViewModel @Inject constructor(
-    private val repositoryTodo: RepositoryTodo
+    @TodoDefaultRepo private val repositoryTodo: RepositoryTodo
 ) : ViewModel() {
 
 

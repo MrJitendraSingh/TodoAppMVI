@@ -1,5 +1,6 @@
-package com.mj.appmvi.core
+package com.mj.appmvi.core.ui
 
+import com.mj.appmvi.core.Const
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -1,4 +1,4 @@
-package com.mj.appmvi.core
+package com.mj.appmvi.core.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -7,12 +7,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.mj.appmvi.domain.model.TodoItemModel
-import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
-import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
+import com.mj.appmvi.core.ui.theme.PreviewWrapper
 import java.util.Calendar
-import java.util.Date
-import kotlin.collections.set
 
 
 @Composable

@@ -20,16 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mj.appmvi.R
-import com.mj.appmvi.core.BackTitleBar
-import com.mj.appmvi.core.DateSelector
-import com.mj.appmvi.core.PrimaryButton
-import com.mj.appmvi.core.TextInputField
+import com.mj.appmvi.core.ui.BackTitleBar
+import com.mj.appmvi.core.ui.DateSelector
+import com.mj.appmvi.core.ui.PrimaryButton
+import com.mj.appmvi.core.ui.TextInputField
 import com.mj.appmvi.domain.model.TodoItemModel
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsActions
 import com.mj.appmvi.presentation.details.intent.UiTaskDetailsEffect
-import com.mj.appmvi.presentation.details.intent.UiTaskDetailsState
 import com.mj.appmvi.presentation.details.model.TaskDetailsViewModel
-import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
+import com.mj.appmvi.core.ui.theme.PreviewWrapper
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.mj.appmvi.core
+package com.mj.appmvi.core.ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,7 +11,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import com.mj.appmvi.R
-import com.mj.appmvi.presentation.ui.theme.PreviewWrapper
+import com.mj.appmvi.core.ui.theme.PreviewWrapper
 
 
 @Composable

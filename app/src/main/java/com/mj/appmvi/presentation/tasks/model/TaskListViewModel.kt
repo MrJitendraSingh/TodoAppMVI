@@ -2,6 +2,7 @@ package com.mj.appmvi.presentation.tasks.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mj.appmvi.core.TodoDefaultRepo
 import com.mj.appmvi.domain.repository.RepositoryTodo
 import com.mj.appmvi.presentation.tasks.intent.UiTaskListActions
 import com.mj.appmvi.presentation.tasks.intent.UiTaskListEffect
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class TaskListViewModel @Inject constructor(
-    private val repositoryTodo: RepositoryTodo
+    @TodoDefaultRepo private val repositoryTodo: RepositoryTodo
 ) : ViewModel(){
 
     private val _state : MutableStateFlow<UiTaskListState> = MutableStateFlow(UiTaskListState())
@@ -53,7 +54,7 @@ class TaskListViewModel @Inject constructor(
     fun getTaskList() {
         viewModelScope.launch(Dispatchers.IO) {
             repositoryTodo.getTodoList().collectLatest { list ->
-                _state.update { UiTaskListState(task = list as ArrayList) }
+                _state.update { UiTaskListState(task = ArrayList(list)) }
             }
         }
     }

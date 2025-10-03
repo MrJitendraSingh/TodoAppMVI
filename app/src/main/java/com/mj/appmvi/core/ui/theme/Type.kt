@@ -1,4 +1,4 @@
-package com.mj.appmvi.presentation.ui.theme
+package com.mj.appmvi.core.ui.theme
 
 import com.mj.appmvi.R
 import androidx.compose.material3.Typography

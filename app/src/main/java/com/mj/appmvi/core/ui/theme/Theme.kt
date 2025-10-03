@@ -1,4 +1,4 @@
-package com.mj.appmvi.presentation.ui.theme
+package com.mj.appmvi.core.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.background

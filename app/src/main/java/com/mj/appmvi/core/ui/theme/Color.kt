@@ -1,4 +1,4 @@
-package com.mj.appmvi.presentation.ui.theme
+package com.mj.appmvi.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.colorspace.WhitePoint
